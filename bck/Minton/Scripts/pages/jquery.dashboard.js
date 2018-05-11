@@ -10,19 +10,7 @@
     var Dashboard = function () { };
 
     //creates Stacked chart
-    Dashboard.prototype.Createlinechart = function (element, data, xkey, ykeys, labels, lineColors) {
-        Morris.Line({
-            element: element,
-            data: data,
-            xkey: xkey,
-            ykeys: ykeys,
-            labels: labels,
-            lineWidth: '6px',
-            parseTime: false,
-            hideHover: true,
-            stacked: true
-        });
-    },
+   
     //creates Stacked chart
     Dashboard.prototype.createStackedChart = function (element, data, xkey, ykeys, labels, lineColors) {
         Morris.Bar({
@@ -55,42 +43,8 @@
     Dashboard.prototype.init = function () {
         
         //creating Stacked chart
-        var $stckedData1 = [
-            { y: 'Jenuary', a: s  },
-            { y: 'Febrary'},
-            { y: 'March', },
-            { y: 'April', },
-            { y: 'May', },
-            { y: 'June'},
-            { y: 'July', },
-            { y: 'August',},
-            { y: 'September',},
-            { y: 'October', },
-            { y: 'November',},
-            { y: 'December', }
-        ];  
-        var s = $.ajax({
-            url: "/Home/acti?appId=BOP17_OI&initialDate=2018-04-01&endDate=2018-04-25",
-            success: function (data) {
-                debugger
-                var o = 0;
-                var i;
-                for (i = 0; i < data.cancellation.length; i++) {
-                    o += data.cancellation[i].Cantidad;
-                }
-
-                $("this.stckedData1").html($stckedData1[0].push = (o)) ;
-                   
-            },
-            error: function (xhr) {
-                debugger;
-            },
-            type: "GET",
-            dataType: 'json',
-            contentType: "application/json; charset=utf-8"
-        })
-        this.createStackedChart('dashboard-chart-1', $stckedData, 'y', ['a', 'b', 'c'], ['Series A', 'Series s', 'Series C'], ['#52bb56', '#f38280', '#ebeff2']);
-
+        
+        this.createStackedChart('dashboard-chart-1', $stckedData, 'y', ReportGeneral(), ['Series A', 'Series s', 'Series C'], ['#52bb56', '#f38280', '#ebeff2']);
         //creating Stacked chart
         var $stckedData = [
             { y: 'Jenuary', a: 70, b: 12 },
@@ -106,7 +60,7 @@
             { y: 'November', a: 18 },
             { y: 'December', a: 19 }
         ];
-        this.Createlinechart('dashboard-chart-2', $stckedData, 'y', ['a', 'b', 'c'], ['Series A', 'Series s', 'Series C'], ['#52bb56', '#f38280', '#ebeff2']);
+       // this.Createlinechart('dashboard-chart-2', $stckedData, 'y', ['a', 'b', 'c'], ['Series A', 'Series s', 'Series C'], ['#52bb56', '#f38280', '#ebeff2']);
 
 
         //creating donut chart

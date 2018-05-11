@@ -12,5 +12,6 @@ namespace Milton.Models
         public List<Subcribe> subcribe { get; set; }
         public List<Cancelation> cancellation { get; set; }
         public int ActiveUsers { get; set; }
+        public List<Tables> ReportGeneral { get; set; }
     }
 }

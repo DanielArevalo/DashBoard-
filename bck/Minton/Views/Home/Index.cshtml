@@ -86,11 +86,12 @@
 </div>
 <!-- end row -->
 
+
 <div class="row">
     <div class="col-md-4">
         <div class="card-box">
-            <h4 class="text-dark  header-title m-t-0 m-b-30">Last 12 Months(Act, Canc, Subs)</h4>
-            <div class="widget-chart text-center" id="l4">
+            <h4 class="text-dark  header-title m-t-0 m-b-30">Total Revenue BOPHelp</h4>
+            <div class="widget-chart text-center">
                 <div id="dashboard-chart-1" style="height: 200px;"></div>
             </div>
         </div>
@@ -140,29 +141,23 @@
 
 </div>
 <!-- end row -->
-
 @section scripts{
-    <!-- Counter Up  -->
-    <script src="~/plugins/waypoints/lib/jquery.waypoints.js"></script>
-    <script src="~/plugins/counterup/jquery.counterup.min.js"></script>
 
-    <!--Morris Chart-->
-    <script src="~/plugins/morris/morris.min.js"></script>
-    <script src="~/plugins/raphael/raphael-min.js"></script>
-
-    <!-- Page js  -->
-    <script src="~/Scripts/pages/jquery.dashboard.js"></script>
 
     <!-- Custom main Js -->
+    <script src="@Url.Content(" ~/Scripts/pages/d3/d3.min.js")"></script>
+    <script src="@Url.Content(" ~/Scripts/pages/nvd3/build/nv.d3.min.js")"></script>
     <script src="~/Scripts/jquery.core.js"></script>
-    <script src="~/Scripts/jquery.app.js"></script>
     <script src="~/plugins/moment/moment.js"></script>
     <script src="~/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
     <script src="~/plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
 
+
     <script type="text/javascript">
         $(document).ready(
             function ($) {
+                var url1 = "/Home/acti?appId=BOP17_OI&initialDate=" + asdF + "&endDate=" + asdT;
+                var url2 = "Home/Report?AppId=BOP17_OI&date='2018/03/28'";
                 var df = new Date();
                 var dt = new Date();
                 var asdF = df.getFullYear() + '-' + (df.getMonth() + 1) + '-' + df.getDate();
@@ -175,6 +170,7 @@
                     language: 'en'
                 });
                 GetInfo();
+                ReportGeneral();
             });
         function GetInfo() {
             var df = new Date($('.fromDate').val());
@@ -184,7 +180,7 @@
             $.ajax({
                 url: "/Home/acti?appId=BOP17_OI&initialDate=" + asdF + "&endDate=" + asdT,
                 success: function (data) {
-                    //debugger;
+
                     $("#l1").html("<b class='counter'>" + data.ActiveUsers + "</b>");
                     var o = 0;
                     for (var i = 0; i < data.subcribe.length; i++) {
@@ -196,7 +192,9 @@
                         o += data.cancellation[i].Cantidad;
                     }
                     $("#l2").html("<b class='counter'>" + o + "</b>");
+
                 },
+
                 error: function (xhr) {
                     debugger;
                 },
@@ -204,6 +202,50 @@
                 dataType: 'json',
                 contentType: "application/json; charset=utf-8"
             });
+
         }
+        function ReportGeneral() {
+            debugger;
+            $.ajax({
+                url: "/Home/Report?appId=BOP17_OI&initialDate=" + asdF,
+                success: function (data) {
+                    console.log(data);
+                    var Date = [];
+                    $.each(data, function (i, j) {
+                        Date.push({
+                            label: '',
+                            value: j.Suscripciones,
+                            color: getColor(1)
+                        })
+                    });
+                    var historicalBarChart = [{
+                        values: Date
+                    }];
+                    nv.addGraph(function () {
+                        debugger;
+                        var barChart = nv.models.discreteBarChart().x(function (d) {
+                            return d.label;
+                        }).y(function (d) {
+                            return d.value;
+                        }).staggerLabels(true).tooltips(false).showValues(true).duration(250);
+                        barChart.yAxis.axisLabel('Sales Quantity');
+                        d3.select('.bar-chart svg').datum(historicalBarChart).call(barChart);
+                        nv.utils.windowResize(barChart.update);
+                        return barChart;
+                    });
+
+                },
+
+                error: function (xhr) {
+                    debugger;
+                },
+                type: "GET",
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8"
+            });
+
+        }
+
+
     </script>
 }
